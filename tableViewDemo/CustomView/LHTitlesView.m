@@ -61,8 +61,7 @@
         btn.tag = idx;
         btn.frame = (CGRect) {btnW * idx, 0, btnW, btnH};
         [btn setTitle:title forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
-        [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(titleClick:) forControlEvents:UIControlEventTouchDown];
         if (!idx) {
             [self titleClick:btn];

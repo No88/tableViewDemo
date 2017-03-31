@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) LHTitlesView *titleView;
 @property (nonatomic, strong) LHPageView *pageView;
+@property (nonatomic, strong) UIImageView *headImageView;
+
 @property (nonatomic, strong) NSArray *childVCs;
 
 @property (nonatomic, strong) UITableViewController *currentVC;
@@ -41,6 +43,7 @@
 - (void)setupInit {
     [self.view addSubview:self.pageView];
     [self.view addSubview:self.titleView];
+    [self.view addSubview:self.headImageView];
     [self.pageView setCurrentIndex:0];
 }
 
@@ -69,20 +72,36 @@
     return _pageView;
 }
 
+- (UIImageView *)headImageView {
+    if (!_headImageView) {
+        _headImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default"]];
+        _headImageView.frame = (CGRect){0, 0, SCREENW, 200};
+        _headImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _headImageView.clipsToBounds = YES;
+    }
+    return _headImageView;
+}
+
 - (NSArray *)childVCs {
     if (!_childVCs) {
         __weak ViewController *weakSelf = self;
         void(^offset)(CGFloat, UITableViewController *) = ^(CGFloat offsetY, UITableViewController *VC) {
             
-            CGRect frame = weakSelf.titleView.frame;
+            CGRect titleFrame = weakSelf.titleView.frame;
             
-            frame.origin.y = 200 - offsetY;
-            if (frame.origin.y <= 0) {
-                frame.origin.y = 0;
-            } else if (frame.origin.y >= 200) {
-                frame.origin.y = 200;
+            titleFrame.origin.y = 200 - offsetY;
+            if (titleFrame.origin.y <= 0) {
+                titleFrame.origin.y = 0;
             }
-            weakSelf.titleView.frame = frame;
+//            else if (titleFrame.origin.y >= 200) {
+//                titleFrame.origin.y = 200;
+//            }
+            
+            weakSelf.titleView.frame = titleFrame;
+            
+            CGRect imageViewFrame = weakSelf.headImageView.frame;
+            imageViewFrame.size.height = titleFrame.origin.y;
+            weakSelf.headImageView.frame = imageViewFrame;
             
             weakSelf.currentVC = VC;
             weakSelf.oldOffsetY = offsetY;
